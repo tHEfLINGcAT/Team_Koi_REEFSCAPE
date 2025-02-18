@@ -4,43 +4,38 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.DoubleSupplier;
 
-/** An example command that uses an example subsystem. */
 public class ElevatorCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ElevatorSubsystem m_subsystem;
+  private final DoubleSupplier joystickInput;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ElevatorCommand(ElevatorSubsystem subsystem) {
-    m_subsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ElevatorCommand(ElevatorSubsystem subsystem, DoubleSupplier joystickInput) {
+    this.m_subsystem = subsystem;
+    this.joystickInput = joystickInput;
     addRequirements(subsystem);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // CHAT DID I DO IT? DID I COOK?
+
   @Override
   public void execute() {
-
+      double speed = joystickInput.getAsDouble();
+      m_subsystem.setTargetVelocity(speed);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.setTargetPosition(Constants.ElevatorConstants.STARTING_POSITION);
+    m_subsystem.stop();
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

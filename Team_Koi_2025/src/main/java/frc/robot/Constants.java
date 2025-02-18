@@ -19,7 +19,6 @@ public final class Constants {
 
   public static class ElevatorConstants{
     public static final int ELEVATE_MOTOR_ID = 0;
-    public static final int STARTING_POSITION = 0;
   }
 
   public static class PIDConstants{
