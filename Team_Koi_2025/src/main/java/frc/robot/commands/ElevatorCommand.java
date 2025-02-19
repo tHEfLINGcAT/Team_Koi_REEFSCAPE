@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
@@ -18,9 +19,9 @@ public class ElevatorCommand extends Command {
     addRequirements(subsystem);
   }
 
-  @Override
+  
   public void initialize() {
-    
+    m_subsystem.setTargetPosition(Constants.ElevatorConstants.ELEVATOR_START_POSITION);
   }
 
   // CHAT DID I DO IT? DID I COOK?

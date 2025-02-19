@@ -33,17 +33,23 @@ public class ElevatorSubsystem extends SubsystemBase{
             .velocityConversionFactor(1000);
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(Constants.PIDConstants.kP, Constants.PIDConstants.kI, Constants.PIDConstants.kD);
-            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            .pid(Constants.ElevatorPIDConstants.kP, Constants.ElevatorPIDConstants.kI, Constants.ElevatorPIDConstants.kD);
+        motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     // makes it go to a certain position (real)
+    // may not be used other than moving it to the start when finished
     public void setTargetPosition(double targetPosition) {
         motor.getClosedLoopController().setReference(targetPosition, ControlType.kPosition);
     }
 
     // sets a velocity to the motor (I have no idea how to make a limit for it, I am gusseing we will just fuck around and find out(not really))
     public void setTargetVelocity(double targetVelocity) {
+        if(motor.getEncoder().getPosition() == Constants.ElevatorConstants.ELEVATOR_END_POSITION && targetVelocity > 0){
+            return;
+        } else if(motor.getEncoder().getPosition() == Constants.ElevatorConstants.ELEVATOR_START_POSITION && targetVelocity < 0){
+            return;
+        }
         motor.getClosedLoopController().setReference(targetVelocity, ControlType.kVelocity);
     }
 
