@@ -26,4 +26,8 @@ public final class Constants {
   public static class ElevatorPIDConstants{
     public static final int kP = 0, kI = 0, kD = 0;
   }
+
+  public static class ElevatorFeedforwardConstants{
+    public static final int kS = 0, kG = 0, kV = 0, kA = 0;;
+  }
 }

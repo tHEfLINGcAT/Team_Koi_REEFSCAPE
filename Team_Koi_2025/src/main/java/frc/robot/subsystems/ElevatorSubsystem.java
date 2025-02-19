@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -21,9 +22,12 @@ import frc.robot.commands.ElevatorCommand;
 
 public class ElevatorSubsystem extends SubsystemBase{
     private final SparkMax motor; // motor yay
-    private final SparkMaxConfig config = new SparkMaxConfig(); // it has the pid and the encoder (probably (I think))
+    private final SparkMaxConfig config; // it has the pid and the encoder (probably (I think))
+    private final ArmFeedforward feedforward = new ArmFeedforward(Constants.ElevatorFeedforwardConstants.kS, Constants.ElevatorFeedforwardConstants.kG, Constants.ElevatorFeedforwardConstants.kV, Constants.ElevatorFeedforwardConstants.kA);
+    private int radians = 0;
 
     public ElevatorSubsystem(DoubleSupplier speedSupplier){
+       this.config = new SparkMaxConfig();
        this.motor = new SparkMax(Constants.ElevatorConstants.ELEVATE_MOTOR_ID, MotorType.kBrushless);
        setDefaultCommand(new ElevatorCommand(this, speedSupplier));
 
@@ -40,7 +44,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     // makes it go to a certain position (real)
     // may not be used other than moving it to the start when finished
     public void setTargetPosition(double targetPosition) {
-        motor.getClosedLoopController().setReference(targetPosition, ControlType.kPosition);
+
+        motor.getClosedLoopController().setReference(feedforward.calculate(radians, targetPosition), ControlType.kPosition);
     }
 
     // sets a velocity to the motor (I have no idea how to make a limit for it, I am gusseing we will just fuck around and find out(not really))
@@ -49,8 +54,8 @@ public class ElevatorSubsystem extends SubsystemBase{
             return;
         } else if(motor.getEncoder().getPosition() == Constants.ElevatorConstants.ELEVATOR_START_POSITION && targetVelocity < 0){
             return;
-        }
-        motor.getClosedLoopController().setReference(targetVelocity, ControlType.kVelocity);
+        }   
+        motor.getClosedLoopController().setReference(feedforward.calculate(radians ,targetVelocity), ControlType.kVelocity);
     }
 
     public void stop(){
