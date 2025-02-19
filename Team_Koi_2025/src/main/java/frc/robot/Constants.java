@@ -16,4 +16,10 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static final class HandRotaionConstants{
+    public static final int CAN_HAND_DEGREE_ID=0;
+    public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
+    public static final double HAND_DGREE_SPARKMAX_Ki=0;
+    public static final double HAND_DGREE_SPARKMAX_Kd=0;    
+  } 
 }
