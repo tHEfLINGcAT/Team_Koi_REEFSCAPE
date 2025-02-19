@@ -6,12 +6,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 
 public class ArmSubsystem extends SubsystemBase {
-    private static final int MOTOR_ID = 1; 
-    private static final double MAX_ANGLE = 100.0; 
-    private static final double MIN_ANGLE = 0.0; 
-    private static final double SPEED_LIMIT = 0.5; 
+     
 
     private final CANSparkMax armMotor;
     private final SparkMaxAbsoluteEncoder encoder;
