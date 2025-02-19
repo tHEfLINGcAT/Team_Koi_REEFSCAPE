@@ -23,5 +23,6 @@ public class RobotHandSubsystem extends SubsystemBase {
             //we will check the speed in real time bcz idk what the speed the vortex should be
             m_SparkMax.setInverted(dir < 0);
             m_SparkMax.set(power);
+
         }
 }
