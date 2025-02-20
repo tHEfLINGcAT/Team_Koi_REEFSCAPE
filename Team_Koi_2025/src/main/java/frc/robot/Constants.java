@@ -23,6 +23,7 @@ public final class Constants {
         public static final double LEFT_Y_DEADBAND = 0.1;
         public static final double RIGHT_X_DEADBAND = 0.1;
         public static final double TURN_CONSTANT    = 6;
+      
     }
     public static final class DrivebaseConstants
     {
@@ -73,6 +74,30 @@ public final class Constants {
         public static final double RELEASE_POWER = 0.2;
         public static final double STOPING_POWER = 0;
     }
+  public static class MotorConstants {
+      public static final int NEO_MOTOR_COUNTS_PER_REV = 42;
+  }
+
+  public static final class Convert {
+      public static final double INCHES_TO_METERS = Units.inchesToMeters(1);
+  }
+
+  public static final class GearRatio {
+    public static final class SwerveModule {
+        public static final double STEERING_GEAR_RATIO = 12.8;  // Common steering gear ratio
+        public static final double DRIVE_GEAR_RATIO = 6.75;    // Typical for swerve drive
+    }
+}
+
+public static final class MotorAttributes {
+    public static final class Neo {
+        public static final int COUNTS_PER_REVOLUTION_SparkMax = 42; // Neo encoders have 42 CPR
+    }
+
+    public static final class Vortex {
+        public static final int COUNTS_PER_REVOLUTION_SparkFlex = 2048; // Assuming Falcon 500/Vortex equivalent
+    }
+}
 
 
 }
