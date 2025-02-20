@@ -48,10 +48,10 @@ public final class Constants {
   }
 
   public static class ArmConstants{
-    private static final int MOTOR_ID = 1; 
-    private static final double MAX_ANGLE = 100.0; 
-    private static final double MIN_ANGLE = 0.0; 
-    private static final double SPEED_LIMIT = 0.5;
+    public static final int MOTOR_ID = 1; 
+    public static final double MAX_ANGLE = 100.0; 
+    public static final double MIN_ANGLE = 0.0; 
+    public static final double SPEED_LIMIT = 0.5;
   }
 
 
