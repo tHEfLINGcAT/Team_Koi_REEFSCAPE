@@ -36,6 +36,21 @@ public final class Constants {
     public static final double MAX_SPEED  = Units.feetToMeters(14.5);
   }
 
+
+  public static class ElevatorConstants{
+    public static final int ELEVATE_MOTOR_ID = 0;
+    public static final int ELEVATOR_START_POSITION = 0;
+    public static final int ELEVATOR_END_POSITION = 0;
+  }
+
+  public static class ElevatorPIDConstants{
+    public static final int kP = 0, kI = 0, kD = 0;
+  }
+
+  public static class ElevatorFeedforwardConstants{
+    public static final int kS = 0, kG = 0, kV = 0, kA = 0;;
+  }
+
   public static final class HandRotaionConstants{
     public static final int CAN_HAND_DEGREE_ID=0;
     public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
@@ -50,5 +65,6 @@ public final class Constants {
         public static final double RELEASE_POWER = 0.2;
         public static final double STOPING_POWER = 0;
     }
+
 
 }
