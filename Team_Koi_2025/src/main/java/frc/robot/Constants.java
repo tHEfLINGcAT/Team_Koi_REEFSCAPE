@@ -36,6 +36,13 @@ public final class Constants {
     public static final double MAX_SPEED  = Units.feetToMeters(14.5);
   }
 
+  public static final class HandRotaionConstants{
+    public static final int CAN_HAND_DEGREE_ID=0;
+    public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
+    public static final double HAND_DGREE_SPARKMAX_Ki=0;
+    public static final double HAND_DGREE_SPARKMAX_Kd=0;    
+  } 
+
     public static final class RobotHandConstants {
         public static final int MOTOR_ID = 17;
         public static final double GRAB_POWER = 1;
