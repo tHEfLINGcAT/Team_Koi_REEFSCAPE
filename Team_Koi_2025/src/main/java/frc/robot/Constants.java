@@ -17,7 +17,7 @@ import swervelib.math.Matter;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = 81 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0,Units.inchesToMeters(8)),ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED  = Units.feetToMeters(14.5);
@@ -56,12 +56,12 @@ public final class Constants {
     public static final double MIN_ANGLE = 0.0; 
     public static final double SPEED_LIMIT = 0.5;
     public static final double ENCODER_OFFSET=0;
-    public static final double Kp=0,Ki=0,Kd=0,FF=0;
+    public static final double Kp=0,Ki=0,Kd=0,FF=1/473;
   }
 
 
   public static class ElevatorFeedforwardConstants{
-    public static final int kS = 0, kG = 0, kV = 0, kA = 0;;
+    public static final int kS = 0, kG = 0, kV = 1/473, kA = 0;;
   }
 
   public static final class HandRotaionConstants{
@@ -69,8 +69,9 @@ public final class Constants {
     public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;
-    public static final double HAND_DGREE_SPARKMAX_FF=0;
+    public static final double HAND_DGREE_SPARKMAX_FF=1/473;
     public static final double HAND_DGREE_ENCODER_OFFSET=0;
+    public static final int[] HAND_DGREE_ENCODER_ID={0,1};
   } 
 
     public static final class RobotHandConstants {

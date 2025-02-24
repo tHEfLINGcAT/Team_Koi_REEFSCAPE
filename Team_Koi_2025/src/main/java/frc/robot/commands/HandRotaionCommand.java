@@ -5,15 +5,17 @@ import frc.robot.subsystems.HandRotaionSubSystem;
 
 public class HandRotaionCommand extends Command {
     public final HandRotaionSubSystem handRoSubsystem;
+    private double degree;
     private Timer timer = new Timer();
-    public HandRotaionCommand(HandRotaionSubSystem handRo){
+    public HandRotaionCommand(HandRotaionSubSystem handRo,double speed){
         handRoSubsystem=handRo;
         addRequirements(handRo);
         timer.reset();
+        degree=speed;
     }
 
-    public void execute(int speed){
-        handRoSubsystem.turnArm(speed);
+    public void execute(){
+        handRoSubsystem.turnArm(degree);
   }
     @Override
     public boolean isFinished() {

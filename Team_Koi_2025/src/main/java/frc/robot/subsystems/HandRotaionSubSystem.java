@@ -1,13 +1,9 @@
 package frc.robot.subsystems;
 
-import java.beans.Encoder;
-
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -19,7 +15,6 @@ public class HandRotaionSubSystem extends SubsystemBase {
     private SparkMax m_handRo;
     private boolean finished;
     double offset=Constants.HandRotaionConstants.HAND_DGREE_ENCODER_OFFSET;
-    Encoder encoder = new Encoder();
     SparkMaxConfig config = new SparkMaxConfig();
     public HandRotaionSubSystem(){
         m_handRo=new SparkMax(Constants.HandRotaionConstants.CAN_HAND_DEGREE_ID, MotorType.kBrushless);
@@ -32,14 +27,14 @@ public class HandRotaionSubSystem extends SubsystemBase {
         .minOutput(-1);
         m_handRo.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_handRo.getEncoder().setPosition(offset);
-        setDefaultCommand(new HandRotaionCommand(this));
+        setDefaultCommand(new HandRotaionCommand(this,0));
         finished=false;
     }
-    public void turnArm(int speed){
-        if (speed>0&&m_handRo.getEncoder().getPosition()+offset!=90) {
+    public void turnArm(Double speed){
+        if (speed>0&&m_handRo.getEncoder().getPosition()!=90) {
                 m_handRo.getClosedLoopController().setReference(speed,SparkMax.ControlType.kPosition);
         }
-        else if (speed<0&&m_handRo.getEncoder().getPosition()+offset!=0) {
+        else if (speed<0&&m_handRo.getEncoder().getPosition()!=0) {
             m_handRo.getClosedLoopController().setReference(speed,SparkMax.ControlType.kPosition);
         }
         else{
