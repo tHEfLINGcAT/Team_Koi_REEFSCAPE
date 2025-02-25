@@ -42,11 +42,12 @@ public class ArmSubsystem extends SubsystemBase {
         // Reset the encoder position to zero
         armMotor.getEncoder().setPosition(offset);
         finished=false;
+        SmartDashboard.putNumber("P Gain", Constants.ArmConstants.Kp);
+        SmartDashboard.putNumber("D Gain", Constants.ArmConstants.Kd);
     }
 
     public void moveArm(double target) {
         // Limit the speed to the defined maximum
-        target = Math.copySign(Math.min(Math.abs(target), Constants.ArmConstants.SPEED_LIMIT), target);
         armAngle = getArmAngle();
 
         // Move the arm only if it's within the allowed angle range

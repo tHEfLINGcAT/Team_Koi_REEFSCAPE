@@ -56,7 +56,7 @@ public final class Constants {
     public static final double MIN_ANGLE = 0.0; 
     public static final double SPEED_LIMIT = 0.5;
     public static final double ENCODER_OFFSET=0;
-    public static final double Kp=0,Ki=0,Kd=0,FF=1/473;
+    public static final double Kp=0,Ki=0,Kd=0,FF=0.0021141649048626;
   }
 
 
