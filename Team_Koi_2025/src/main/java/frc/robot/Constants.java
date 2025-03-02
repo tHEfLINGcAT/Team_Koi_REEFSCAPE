@@ -24,7 +24,7 @@ public final class Constants {
 
     public static class OperatorConstants {
         public static final int kDriverControllerPort = 0;
-        public static final double DEADBAND        = 0.1;
+        public static final double DEADBAND        = 0.3;
         public static final double LEFT_Y_DEADBAND = 0.1;
         public static final double RIGHT_X_DEADBAND = 0.1;
         public static final double TURN_CONSTANT    = 6;
@@ -75,7 +75,7 @@ public final class Constants {
   } 
 
     public static final class RobotHandConstants {
-        public static final int MOTOR_ID = 17;
+        public static final int MOTOR_ID = 20;
         public static final double GRAB_POWER = 1;
         public static final double IDLE_POWER = 0.1;
         public static final double RELEASE_POWER = 0.2;

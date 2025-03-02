@@ -18,7 +18,7 @@ public class HandControllerCommand extends Command {
     
     @Override
     public void execute(){
-        m_HandSubsystem.powerHand(exec_dir > 0 ? RobotHandConstants.GRAB_POWER : RobotHandConstants.RELEASE_POWER , exec_dir); //Apply grabbing power positively
+        m_HandSubsystem.powerHand(exec_dir, end_dir); //Apply grabbing power positively
     }
 
     @Override
