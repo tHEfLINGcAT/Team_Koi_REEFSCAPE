@@ -12,12 +12,12 @@ public class HandRotaionCommand extends Command {
         timer.reset();
     }
 
-    public void initialize(int speed){
-        handRoSubsystem.turnArm(speed);
+    public void initialize(double degree){
+        handRoSubsystem.turnArm(degree);
   }
     @Override
     public boolean isFinished() {
         //I think after 2 seconds it should have finished or when the motor got to the right angle
-        return timer.hasElapsed(2)||handRoSubsystem.getFinished();
+        return timer.hasElapsed(2)||handRoSubsystem.isFinished();
     }
 }
