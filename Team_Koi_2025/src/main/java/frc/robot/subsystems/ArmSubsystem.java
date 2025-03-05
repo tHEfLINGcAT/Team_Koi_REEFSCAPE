@@ -7,11 +7,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,11 +19,12 @@ public class ArmSubsystem extends SubsystemBase {
     private double armAngle;
     private double offset=Constants.ArmConstants.ENCODER_OFFSET;
     private boolean finished;
+    DutyCycleEncoder encoder;
 
     public ArmSubsystem() {
         // Initialize the motor with the specified ID and motor type
         armMotor = new SparkMax(Constants.ArmConstants.MOTOR_ID, SparkMax.MotorType.kBrushless);
-
+        encoder=new DutyCycleEncoder(Constants.ArmConstants.ENCODER_PORT, 360, Constants.ArmConstants.ENCODER_OFFSET);
         // Create a new configuration object
         config = new SparkMaxConfig();
 
@@ -34,7 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
         config.idleMode(IdleMode.kBrake);
         config.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(Constants.ArmConstants.Kp, Constants.ArmConstants.Ki, Constants.ArmConstants.Kd, 0.0);
+        .pid(Constants.ArmConstants.Kp, Constants.ArmConstants.Ki, Constants.ArmConstants.Kd);
 
         // Apply the configuration to the motor controller
         armMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
@@ -42,14 +40,12 @@ public class ArmSubsystem extends SubsystemBase {
         // Reset the encoder position to zero
         armMotor.getEncoder().setPosition(offset);
         finished=false;
-        SmartDashboard.putNumber("P Gain", Constants.ArmConstants.Kp);
-        SmartDashboard.putNumber("D Gain", Constants.ArmConstants.Kd);
     }
 
     public void moveArm(double target) {
         // Limit the speed to the defined maximum
         armAngle = getArmAngle();
-
+        //SmartDashboard.putNumber("Arm setpoint", target);
         // Move the arm only if it's within the allowed angle range
         if ((target > 0 && armAngle < Constants.ArmConstants.MAX_ANGLE) || (target < 0 && armAngle > Constants.ArmConstants.MIN_ANGLE)) {
             armMotor.getClosedLoopController().setReference(target,SparkMax.ControlType.kPosition,ClosedLoopSlot.kSlot0, getFF());
@@ -61,8 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getArmAngle() {
         // Calculate the arm angle based on the encoder position
-        armAngle = armMotor.getEncoder().getPosition() * 360.0;
-        SmartDashboard.putNumber("Arm Angle", armAngle);
+        armAngle = encoder.get();
         return armAngle;
     }
 
@@ -78,7 +73,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        
-        super.periodic();
+        //SmartDashboard.putNumber("P Arm Gain",Constants.ArmConstants.Kp);
+       // SmartDashboard.putNumber("D Arm Gain", Constants.ArmConstants.Kd);
+        //SmartDashboard.putNumber("Current postion/arm Angle", encoder.get());
+        //super.periodic();
     }
 }

@@ -47,31 +47,32 @@ public final class Constants {
   }
 
   public static class ElevatorPIDConstants{
-    public static final int kP = 0, kI = 0, kD = 0;
+    public static final double kP = 0, kI = 0, kD = 0;
   }
 
   public static class ArmConstants{
-    public static final int MOTOR_ID = 1; 
+    public static final int MOTOR_ID = 0; 
     public static final double MAX_ANGLE = 100.0; 
     public static final double MIN_ANGLE = 0.0; 
     public static final double SPEED_LIMIT = 0.5;
     public static final double ENCODER_OFFSET=0;
+    public static final int ENCODER_PORT=24;
     public static final double Kp=0,Ki=0,Kd=0,FF=0.0021141649048626;
   }
 
 
   public static class ElevatorFeedforwardConstants{
-    public static final int kS = 0, kG = 0, kV = 1/473, kA = 0;;
+    public static final double kS = 0, kG = 0, kV =0.0021141649048626, kA = 0;;
   }
 
   public static final class HandRotaionConstants{
-    public static final int CAN_HAND_DEGREE_ID=0;
-    public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
+    public static final int CAN_HAND_DEGREE_ID=21;
+    public static final double HAND_DGREE_SPARKMAX_Kp=0.005;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;
-    public static final double HAND_DGREE_SPARKMAX_FF=1/473;
-    public static final double HAND_DGREE_ENCODER_OFFSET=0;
-    public static final int[] HAND_DGREE_ENCODER_ID={0,1};
+    public static final double HAND_DGREE_SPARKMAX_FF=0.0021141649048626;
+    public static final double HAND_DGREE_ENCODER_OFFSET=165.118504;
+    public static final int HAND_DGREE_ENCODER_PORT=0;
   } 
 
     public static final class RobotHandConstants {
