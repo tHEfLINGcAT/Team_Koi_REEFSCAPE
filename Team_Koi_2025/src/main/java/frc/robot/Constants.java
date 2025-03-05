@@ -65,6 +65,7 @@ public final class Constants {
     public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;    
+    public static final double TURNING_SPEED=0.5;
   } 
 
     public static final class RobotHandConstants {
