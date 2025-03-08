@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.HandControllerCommand;
 import frc.robot.commands.HandRotaionCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.HandRotaionSubSystem;
 import frc.robot.subsystems.RobotHandSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -41,6 +43,7 @@ public class RobotContainer
   final CommandXboxController handXbox=new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final RobotHandSubsystem ControlHand=new RobotHandSubsystem();
+  private final ArmSubsystem armSubsystem=new ArmSubsystem();
   private final HandRotaionSubSystem RotateHandSub=new HandRotaionSubSystem();
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve"));
@@ -54,7 +57,7 @@ public class RobotContainer
                                                             .withControllerRotationAxis(driverXbox::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(false);
+                                                            .allianceRelativeControl(true);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
@@ -128,6 +131,8 @@ public class RobotContainer
         Command removePeice=new HandControllerCommand(ControlHand,1,-1);
         Command RotateHand=new HandRotaionCommand(RotateHandSub, 90,false);
         Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 10,true);
+        Command rotateHandCommand=new ArmCommand(armSubsystem,290,false);
+        Command roteteHandCommandBack=new ArmCommand(armSubsystem, 350, true);
 
     if (RobotBase.isSimulation())
     {
@@ -179,6 +184,8 @@ public class RobotContainer
       handXbox.rightTrigger().whileTrue(removePeice);
       handXbox.y().onTrue(RotateHand);
       handXbox.a().onTrue(RotateHandSecond);
+      handXbox.povDown().onTrue(rotateHandCommand);
+      handXbox.povUp().onTrue(roteteHandCommandBack);
       driverXbox.b().whileTrue(
         drivebase.driveToPose(
             new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))

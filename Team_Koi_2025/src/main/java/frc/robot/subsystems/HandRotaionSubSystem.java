@@ -26,8 +26,8 @@ public class HandRotaionSubSystem extends SubsystemBase {
         .pidf(Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kp, Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Ki, Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kd,Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_FF)
         .maxOutput(1)
         .minOutput(-1);
-        SmartDashboard.putNumber("P hand Gain",Constants.ArmConstants.Kp);
-        SmartDashboard.putNumber("D hand Gain", Constants.ArmConstants.Kd);
+       // SmartDashboard.putNumber("P hand Gain",Constants.ArmConstants.Kp);
+       // SmartDashboard.putNumber("D hand Gain", Constants.ArmConstants.Kd);
         m_handRo.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
     public void turnArm(Double angle,boolean inverted){
@@ -55,8 +55,8 @@ public class HandRotaionSubSystem extends SubsystemBase {
         return encoder.get();
     }
     public void periodic(){
-        SmartDashboard.putNumber("curret rotaion postion",getPosition());
-        SmartDashboard.putNumber("set point",90);
+      //  SmartDashboard.putNumber("curret rotaion postion",getPosition());
+       // SmartDashboard.putNumber("set point",90);
     }
 }
 ;

@@ -51,13 +51,13 @@ public final class Constants {
   }
 
   public static class ArmConstants{
-    public static final int MOTOR_ID = 0; 
-    public static final double MAX_ANGLE = 100.0; 
-    public static final double MIN_ANGLE = 0.0; 
+    public static final int MOTOR_ID = 25; 
+    public static final double MAX_ANGLE = 269; 
+    public static final double MIN_ANGLE = 350; 
     public static final double SPEED_LIMIT = 0.5;
-    public static final double ENCODER_OFFSET=0;
-    public static final int ENCODER_PORT=24;
-    public static final double Kp=0,Ki=0,Kd=0,FF=0.0021141649048626;
+    public static final double ENCODER_OFFSET=84;
+    public static final int ENCODER_PORT=2;
+    public static final double Kp=0.0069,Ki=0,Kd=0,FF=0;
   }
 
 
@@ -67,7 +67,7 @@ public final class Constants {
 
   public static final class HandRotaionConstants{
     public static final int CAN_HAND_DEGREE_ID=21;
-    public static final double HAND_DGREE_SPARKMAX_Kp=0.005;
+    public static final double HAND_DGREE_SPARKMAX_Kp=0.0543;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;
     public static final double HAND_DGREE_SPARKMAX_FF=0.0021141649048626;
