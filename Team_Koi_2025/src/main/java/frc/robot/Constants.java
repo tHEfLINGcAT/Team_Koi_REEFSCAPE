@@ -41,7 +41,7 @@ public final class Constants {
 
 
   public static class ElevatorConstants{
-    public static final int ELEVATE_MOTOR_ID = 0;
+    public static final int ELEVATE_MOTOR_ID = 26;
     public static final int ELEVATOR_START_POSITION = 0;
     public static final int ELEVATOR_END_POSITION = 0;
   }
@@ -56,8 +56,9 @@ public final class Constants {
     public static final double MIN_ANGLE = 350; 
     public static final double SPEED_LIMIT = 0.5;
     public static final double ENCODER_OFFSET=84;
-    public static final int ENCODER_PORT=2;
-    public static final double Kp=0.0069,Ki=0,Kd=0,FF=0;
+    public static final int ENCODER_PORT=0;
+    public static final double Kp=0.12,Ki=0,Kd=0.03;
+    public static final double Ks=1,Kg=-0.9,Kv=1.1,Ka=0;
   }
 
 
@@ -72,13 +73,13 @@ public final class Constants {
     public static final double HAND_DGREE_SPARKMAX_Kd=0;
     public static final double HAND_DGREE_SPARKMAX_FF=0.0021141649048626;
     public static final double HAND_DGREE_ENCODER_OFFSET=165.118504;
-    public static final int HAND_DGREE_ENCODER_PORT=0;
+    public static final int HAND_DGREE_ENCODER_PORT=4;
   } 
 
     public static final class RobotHandConstants {
         public static final int MOTOR_ID = 20;
         public static final double GRAB_POWER = 1;
-        public static final double IDLE_POWER = 0.1;
+        public static final double IDLE_POWER = 0.08;
         public static final double RELEASE_POWER = 0.2;
         public static final double STOPING_POWER = 0;
     }

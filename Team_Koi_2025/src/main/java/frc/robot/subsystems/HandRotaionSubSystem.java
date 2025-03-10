@@ -14,7 +14,7 @@ import frc.robot.Constants;
 
 public class HandRotaionSubSystem extends SubsystemBase {
     private SparkMax m_handRo;
-    private boolean finished;
+    private boolean finished,isInverted;
     double offset;
     DutyCycleEncoder encoder;
     SparkMaxConfig config = new SparkMaxConfig();
@@ -31,19 +31,20 @@ public class HandRotaionSubSystem extends SubsystemBase {
         m_handRo.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
     public void turnArm(Double angle,boolean inverted){
-       if (Math.abs(angle-getPosition())<=5) {
-        m_handRo.set(0);
+       if (getPosition()<=angle&&!inverted) {
+            m_handRo.set(0.3);
+            isInverted=false;
+       }
+       else if (inverted&&getPosition()>=angle) {
+            m_handRo.set(-0.3);
+            isInverted=true;
        }
        else{
-        if (inverted) {
-            //m_handRo.getClosedLoopController().setReference(-angle,SparkMax.ControlType.kPosition);  
-            m_handRo.set(-0.5);
-        }
-        else{
-            //m_handRo.getClosedLoopController().setReference(angle,SparkMax.ControlType.kPosition);
-            m_handRo.set(0.5);
-        }
+        m_handRo.set(0);
+       }
     }
+    public boolean isInverted(){
+        return isInverted;
     }
     public void endMotor(){
         m_handRo.set(0);
@@ -55,7 +56,8 @@ public class HandRotaionSubSystem extends SubsystemBase {
         return encoder.get();
     }
     public void periodic(){
-      //  SmartDashboard.putNumber("curret rotaion postion",getPosition());
+        SmartDashboard.putNumber("curret rotaion postion",(int)getPosition());
+        SmartDashboard.putBoolean("isCOnnected rotate", encoder.isConnected());
        // SmartDashboard.putNumber("set point",90);
     }
 }

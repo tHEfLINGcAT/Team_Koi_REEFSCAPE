@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.HandControllerCommand;
 import frc.robot.commands.HandRotaionCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.HandRotaionSubSystem;
 import frc.robot.subsystems.RobotHandSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -39,12 +41,13 @@ public class RobotContainer
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final         CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController handXbox=new CommandXboxController(1);
+  final         CommandXboxController driverXbox = new CommandXboxController(1);
+  final CommandXboxController handXbox=new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   private final RobotHandSubsystem ControlHand=new RobotHandSubsystem();
   private final ArmSubsystem armSubsystem=new ArmSubsystem();
   private final HandRotaionSubSystem RotateHandSub=new HandRotaionSubSystem();
+  private final ElevatorSubsystem elevatorSubsystem=new ElevatorSubsystem();
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve"));
                                                                         
@@ -52,18 +55,18 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() *-0.7,
-                                                                () -> driverXbox.getLeftX()*-0.7)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                                () -> driverXbox.getLeftY() *-0.8,
+                                                                () -> driverXbox.getLeftX()*-0.8)
+                                                            .withControllerRotationAxis(()->driverXbox.getRightX()*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
+                                                            .allianceRelativeControl(false);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
    */
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> driverXbox.getRightX()*-0.7,
-                                                                                             () -> driverXbox.getRightY()*-0.7)
+                                                                                             () -> driverXbox.getRightY()* -0.7)
                                                            .headingWhile(true);
 
   /**
@@ -128,11 +131,12 @@ public class RobotContainer
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
         Command grabPeice=new HandControllerCommand(ControlHand,1,1);
-        Command removePeice=new HandControllerCommand(ControlHand,1,-1);
+        Command removePeice=new HandControllerCommand(ControlHand,0.5,-1);
         Command RotateHand=new HandRotaionCommand(RotateHandSub, 90,false);
-        Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 10,true);
-        Command rotateHandCommand=new ArmCommand(armSubsystem,290,false);
-        Command roteteHandCommandBack=new ArmCommand(armSubsystem, 350, true);
+        Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 13,true);
+        Command rotateHandCommand=new ArmCommand(armSubsystem,290,2);
+        Command putL2reefComman=new ArmCommand(armSubsystem, 336, 2);
+        Command roteteHandCommandBack=new ArmCommand(armSubsystem, 315, 2);
 
     if (RobotBase.isSimulation())
     {
@@ -177,7 +181,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+      drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       handXbox.leftTrigger().whileTrue(grabPeice);
@@ -186,6 +190,8 @@ public class RobotContainer
       handXbox.a().onTrue(RotateHandSecond);
       handXbox.povDown().onTrue(rotateHandCommand);
       handXbox.povUp().onTrue(roteteHandCommandBack);
+      handXbox.povLeft().onTrue(putL2reefComman);
+        elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, ()->handXbox.getLeftY()*0.8));
       driverXbox.b().whileTrue(
         drivebase.driveToPose(
             new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
@@ -210,7 +216,7 @@ public class RobotContainer
     return new RunCommand(()->
       {
         drivebase.zeroGyro();
-        drivebase.drive(new ChassisSpeeds(-1,0,0));
+        drivebase.drive(new ChassisSpeeds(1,0,0));
       }
       
       , drivebase).withTimeout(4);

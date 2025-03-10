@@ -16,10 +16,11 @@ public class HandRotaionCommand extends Command {
 
     public void execute(){
         handRoSubsystem.turnArm(degree,inverted);
+      //  System.out.println("COMMAND ROTATE");
   }
     @Override
     public boolean isFinished() {
         //when the motor got to the right angle
-        return (Math.abs((degree-handRoSubsystem.getPosition())))<=5;
+        return (handRoSubsystem.getPosition()<=degree&&handRoSubsystem.isInverted())||(handRoSubsystem.getPosition()>=degree&&!handRoSubsystem.isInverted());
     }
 }

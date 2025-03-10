@@ -6,9 +6,9 @@ import frc.robot.Constants.RobotHandConstants;;
 
 public class HandControllerCommand extends Command {
     private final RobotHandSubsystem m_HandSubsystem;
-    private final int exec_dir; //direction for the grabbing/releasing
+    private final double exec_dir; //direction for the grabbing/releasing
     private final int end_dir;
-    public HandControllerCommand(RobotHandSubsystem hand, int exec_dir, int end_dir){
+    public HandControllerCommand(RobotHandSubsystem hand, double exec_dir, int end_dir){
         m_HandSubsystem=hand;
         addRequirements(hand);
         this.exec_dir = exec_dir;

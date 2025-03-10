@@ -1,20 +1,22 @@
 package frc.robot.commands;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmCommand extends Command{
     private final ArmSubsystem m_ArmSubsystem;
     private final double angle;
-    private final boolean inverted;
-    public ArmCommand(ArmSubsystem subsystem,double anglle,boolean invertedd){
+    private final double velocity;
+    public ArmCommand(ArmSubsystem subsystem,double anglle,double velcoiity){
         m_ArmSubsystem=subsystem;
         angle=anglle;
-        inverted=invertedd;
+        velocity=velcoiity;
+        ;
         addRequirements(subsystem);
     }
     public void execute(){
-        m_ArmSubsystem.moveArm(angle,inverted);
-        System.out.println("I DO STUFF");
+        m_ArmSubsystem.moveArm(angle,velocity);
+        System.out.println("EECUTING");
     }
 
    // public void end(boolean interrupted){

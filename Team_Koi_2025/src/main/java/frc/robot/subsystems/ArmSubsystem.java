@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,9 +20,9 @@ public class ArmSubsystem extends SubsystemBase {
     private final SparkMax armMotor;
     private final SparkMaxConfig config;
     private double armAngle;
-    private double offset=Constants.ArmConstants.ENCODER_OFFSET;
     private boolean finished;
     DutyCycleEncoder encoder;
+    ArmFeedforward feedforward;
     private final PIDController pidController;
 
     public ArmSubsystem() {
@@ -32,7 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
         pidController.setTolerance(1);
         // Create a new configuration object
         config = new SparkMaxConfig();
-
+        
         // Set the idle mode to brake
         config.idleMode(IdleMode.kBrake);
         config.inverted(false);
@@ -43,13 +44,22 @@ public class ArmSubsystem extends SubsystemBase {
         finished=false;
     }
 
-    public void moveArm(double target,boolean inverted) {
+    public void moveArm(double target,double velocity) {
         // Limit the speed to the defined maximum
         armAngle = getArmAngle();
+        //double kg=Constants.ArmConstants.Kg*Math.cos(Math.toRadians(armAngle));
+       // double kV=Constants.ArmConstants.Kv;
+      //  double ff=feedforward.calculate(armAngle, velocity);
         //SmartDashboard.putNumber("Arm setpoint", target);
         // Move the arm only if it's within the allowed angle range
-        if((target <= Constants.ArmConstants.MIN_ANGLE && target >= Constants.ArmConstants.MAX_ANGLE)){
-            armMotor.set(pidController.calculate(armAngle,target));
+        if(target <= Constants.ArmConstants.MIN_ANGLE && target >= Constants.ArmConstants.MAX_ANGLE&&armAngle<358){
+           // armMotor.set(pidController.calculate(armAngle,target));
+                armMotor.setVoltage((pidController.calculate(armAngle,target))
+            +feedforward.calculate(Math.toRadians(armAngle),velocity));
+          //  armMotor.setVoltage(Kg);
+        // armMotor.setVoltage(-0.9);
+          // armMotor.setVoltage(kV);
+            
             finished=false;
         } else {
             finished=true;
@@ -72,18 +82,17 @@ public class ArmSubsystem extends SubsystemBase {
     public boolean getFinished(){
         return finished;
     }
-    private double getFF(){
-        return Constants.ArmConstants.FF * Math.sin(Units.degreesToRadians(getArmAngle()) ) ;
-    }
     @Override
     public void periodic() {
         int currentAramAngle=(int)getArmAngle();
         SmartDashboard.putNumber("P Arm Gain",Constants.ArmConstants.Kp);
         SmartDashboard.putNumber("D Arm Gain", Constants.ArmConstants.Kd);
-        SmartDashboard.putNumber("FF Arm Gain", Constants.ArmConstants.FF);
         SmartDashboard.putNumber("Arm angle position", currentAramAngle);
         SmartDashboard.putBoolean("Arm angle encoder connected", encoderConnected());
         SmartDashboard.putNumber("setPoint", 290);
         SmartDashboard.putNumber("error", 290-currentAramAngle);
+        double Kg=Constants.ArmConstants.Kg*Math.sin(Math.toRadians(armAngle));
+        feedforward=new ArmFeedforward(Constants.ArmConstants.Ks, Constants.ArmConstants.Kg, Constants.ArmConstants.Kv);
+
     }
 }

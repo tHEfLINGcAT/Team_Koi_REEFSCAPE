@@ -20,25 +20,24 @@ public class ElevatorCommand extends Command {
   }
 
   
-  public void initialize() {
-    m_subsystem.setTargetPosition(Constants.ElevatorConstants.ELEVATOR_START_POSITION);
-  }
+  //public void initialize() {
+   // m_subsystem.setTargetPosition(Constants.ElevatorConstants.ELEVATOR_START_POSITION);
+  //}
 
   // CHAT DID I DO IT? DID I COOK?
 
   @Override
   public void execute() {
-      double speed = joystickInput.getAsDouble();
+      double speed = (joystickInput.getAsDouble());
       m_subsystem.setTargetVelocity(speed);
+    //  System.out.println("IM RUNNINGGG:"+(speed));
   }
 
   @Override
   public void end(boolean interrupted) {
     m_subsystem.stop();
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    if (interrupted) {
+      System.out.println("INTURAPTED");
+    }
+   }
 }
