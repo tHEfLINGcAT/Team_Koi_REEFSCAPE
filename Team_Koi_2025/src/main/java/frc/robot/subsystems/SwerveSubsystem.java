@@ -70,6 +70,9 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private Vision vision;
 
+  // state variable for precision mode
+  private boolean precisionMode = false;
+
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
@@ -99,6 +102,7 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setModuleEncoderAutoSynchronize(false,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
 //    swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
+    
     if (visionDriveTest)
     {
       setupPhotonVision();
@@ -487,7 +491,8 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
   {
     return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
+      // swerveDrive.driveFieldOriented(velocity.get());
+      swerveDrive.drive(velocity.get()); // a change to hopefully make it field oriented
     });
   }
 
@@ -729,4 +734,47 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive;
   }
+
+
+  public boolean rotateToHeading(double targetHeadingInDegrees) {
+    // Get the current robot heading
+    Rotation2d currentHeading = swerveDrive.getOdometryHeading();
+    Rotation2d targetHeading = Rotation2d.fromDegrees(targetHeadingInDegrees);
+
+    // Calculate the heading error (normalized to [-π, π])
+    double headingError = targetHeading.getRadians() - currentHeading.getRadians();
+    headingError = (headingError + Math.PI) % (2 * Math.PI) - Math.PI;
+
+    // Threshold to consider rotation complete
+    final double THRESHOLD_RADIANS = Math.toRadians(1); 
+
+    // If we're close enough, stop rotating and return true
+    if (Math.abs(headingError) < THRESHOLD_RADIANS) {
+        ChassisSpeeds cV = swerveDrive.getRobotVelocity();
+        swerveDrive.drive(new ChassisSpeeds(cV.vxMetersPerSecond, cV.vyMetersPerSecond, 0));
+        return true;
+    }
+
+    // Otherwise, keep rotating
+    double rotationSpeed = headingError * 0.1;
+    ChassisSpeeds cV = swerveDrive.getRobotVelocity();
+    swerveDrive.drive(new ChassisSpeeds(cV.vxMetersPerSecond, cV.vyMetersPerSecond, rotationSpeed));
+    
+    return false;
+}
+
+
+
+  /*
+   * precision mode setter and getter:
+   */
+   public void SetPrecisionMode(boolean value) 
+   {
+      precisionMode = value;
+   }
+
+   public boolean GetPrecisionMode()
+   {
+    return precisionMode;
+   }
 }

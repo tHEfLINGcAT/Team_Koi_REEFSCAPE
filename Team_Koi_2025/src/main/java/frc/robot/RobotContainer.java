@@ -23,9 +23,13 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.HandControllerCommand;
 import frc.robot.commands.HandRotaionCommand;
+import frc.robot.commands.PrecisionModeCommand;
+import frc.robot.commands.PresetRotationCommand;
+import frc.robot.commands.ResetRobotRotationCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.HandRotaionSubSystem;
 import frc.robot.subsystems.RobotHandSubsystem;
+import frc.robot.subsystems.RotationPresetSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -39,24 +43,27 @@ public class RobotContainer
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final         CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController handXbox=new CommandXboxController(1);
+  final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController handXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final RobotHandSubsystem ControlHand=new RobotHandSubsystem();
   private final ArmSubsystem armSubsystem=new ArmSubsystem();
   private final HandRotaionSubSystem RotateHandSub=new HandRotaionSubSystem();
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve"));
-                                                                        
+  private final RotationPresetSubsystem rotateRobotSub = new RotationPresetSubsystem(drivebase, new int[] {0, 45, 90, 135, 180, 225, 270, 315});
+
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
+  
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() *-0.7,
-                                                                () -> driverXbox.getLeftX()*-0.7)
+                                                                () -> driverXbox.getLeftY() * -0.7,
+                                                                () -> driverXbox.getLeftX() * -0.7)
                                                             .withControllerRotationAxis(driverXbox::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
+                                                            .scaleTranslation(drivebase.GetPrecisionMode() ? 0.3 : 0.8)
+                                                            .scaleRotation(drivebase.GetPrecisionMode() ? 0.45 : 1)
                                                             .allianceRelativeControl(true);
 
   /**
@@ -133,6 +140,11 @@ public class RobotContainer
         Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 10,true);
         Command rotateHandCommand=new ArmCommand(armSubsystem,290,false);
         Command roteteHandCommandBack=new ArmCommand(armSubsystem, 350, true);
+        Command precisionModeCommand=new PrecisionModeCommand(drivebase);
+        Command resetRotationCommand=new ResetRobotRotationCommand(rotateRobotSub);
+        Command presetPositiveRotationCommand=new PresetRotationCommand(rotateRobotSub, true);
+        Command presetNegativeRotationCommand=new PresetRotationCommand(rotateRobotSub, false);
+        
 
     if (RobotBase.isSimulation())
     {
@@ -163,7 +175,7 @@ public class RobotContainer
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-
+      
     }
     if (DriverStation.isTest())
     {
@@ -175,26 +187,32 @@ public class RobotContainer
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
-    } else
+    } 
+      else
     {
+      // driver controller bindings
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.b().whileTrue(
+        drivebase.driveToPose(
+            new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+                            );
+      driverXbox.y().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverXbox.start().whileTrue(Commands.none());
+      driverXbox.back().whileTrue(Commands.none());
+      driverXbox.rightTrigger().whileTrue(precisionModeCommand);
+      driverXbox.rightBumper().debounce(0.1).onTrue(presetPositiveRotationCommand);
+      driverXbox.leftBumper().debounce(0.1).onTrue(presetNegativeRotationCommand);
+
+
+      // operator controller bindings
       handXbox.leftTrigger().whileTrue(grabPeice);
       handXbox.rightTrigger().whileTrue(removePeice);
       handXbox.y().onTrue(RotateHand);
       handXbox.a().onTrue(RotateHandSecond);
       handXbox.povDown().onTrue(rotateHandCommand);
       handXbox.povUp().onTrue(roteteHandCommandBack);
-      driverXbox.b().whileTrue(
-        drivebase.driveToPose(
-            new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-                            );
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
-    
     }
 
   }
