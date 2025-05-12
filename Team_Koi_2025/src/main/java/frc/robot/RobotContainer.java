@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -43,7 +44,7 @@ public class RobotContainer
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandPS4Controller driverPS = new CommandPS4Controller(0);
   final CommandXboxController handXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final RobotHandSubsystem ControlHand=new RobotHandSubsystem();
@@ -58,19 +59,18 @@ public class RobotContainer
    */
   
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() * -0.7,
-                                                                () -> driverXbox.getLeftX() * -0.7)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                                () -> driverPS.getLeftY() * -0.7,
+                                                                () -> driverPS.getLeftX() * -0.7)
+                                                            .withControllerRotationAxis(driverPS::getRightY)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(drivebase.GetPrecisionMode() ? 0.3 : 0.8)
-                                                            .scaleRotation(drivebase.GetPrecisionMode() ? 0.45 : 1)
                                                             .allianceRelativeControl(true);
 
   /**
    * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
    */
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> driverXbox.getRightX()*-0.7,
-                                                                                             () -> driverXbox.getRightY()*-0.7)
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> driverPS.getRightX()*-0.7,
+                                                                                             () -> driverPS.getRightY()*-0.7)
                                                            .headingWhile(true);
 
   /**
@@ -80,9 +80,9 @@ public class RobotContainer
                                                              .allianceRelativeControl(false);
 
   SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                        () -> -driverXbox.getLeftY(),
-                                                                        () -> -driverXbox.getLeftX())
-                                                                    .withControllerRotationAxis(() -> driverXbox.getRawAxis(
+                                                                        () -> -driverPS.getLeftY(),
+                                                                        () -> -driverPS.getLeftX())
+                                                                    .withControllerRotationAxis(() -> driverPS.getRawAxis(
                                                                         2))
                                                                     .deadband(OperatorConstants.DEADBAND)
                                                                     .scaleTranslation(0.8)
@@ -91,14 +91,14 @@ public class RobotContainer
   SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
                                                                                .withControllerHeadingAxis(() ->
                                                                                                               Math.sin(
-                                                                                                                  driverXbox.getRawAxis(
+                                                                                                                  driverPS.getRawAxis(
                                                                                                                       2) *
                                                                                                                   Math.PI) *
                                                                                                               (Math.PI *
                                                                                                                2),
                                                                                                           () ->
                                                                                                               Math.cos(
-                                                                                                                  driverXbox.getRawAxis(
+                                                                                                                  driverPS.getRawAxis(
                                                                                                                       2) *
                                                                                                                   Math.PI) *
                                                                                                               (Math.PI *
@@ -106,8 +106,7 @@ public class RobotContainer
                                                                                .headingWhile(true);
 
   /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+    */
   public RobotContainer()
   {
     // Configure the trigger bindings
@@ -171,9 +170,9 @@ public class RobotContainer
                                                                              360),
                                                                          Math.toRadians(
                                                                              90))));
-      driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
-      driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
-      driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
+      driverPS.PS().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driverPS.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
+      driverPS.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
       
     }
@@ -181,29 +180,29 @@ public class RobotContainer
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      driverPS.cross().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverPS.triangle().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+      driverPS.PS().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverPS.share().whileTrue(drivebase.centerModulesCommand());
+      driverPS.L1().onTrue(Commands.none());
+      driverPS.R1().onTrue(Commands.none());
     } 
       else
     {
       // driver controller bindings
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.b().whileTrue(
+      driverPS.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverPS.square().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverPS.circle().whileTrue(
         drivebase.driveToPose(
             new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
                             );
-      driverXbox.y().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.start().whileTrue(Commands.none());
-      driverXbox.back().whileTrue(Commands.none());
-      driverXbox.rightTrigger().whileTrue(precisionModeCommand);
-      driverXbox.rightBumper().debounce(0.1).onTrue(presetPositiveRotationCommand);
-      driverXbox.leftBumper().debounce(0.1).onTrue(presetNegativeRotationCommand);
+      driverPS.triangle().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driverPS.PS().whileTrue(Commands.none());
+      driverPS.share().whileTrue(Commands.none());
+      driverPS.R2().whileTrue(precisionModeCommand);
+      driverPS.R1().debounce(0.1).onTrue(presetPositiveRotationCommand);
+      driverPS.L1().debounce(0.1).onTrue(presetNegativeRotationCommand);
 
 
       // operator controller bindings
@@ -214,7 +213,6 @@ public class RobotContainer
       handXbox.povDown().onTrue(rotateHandCommand);
       handXbox.povUp().onTrue(roteteHandCommandBack);
     }
-
   }
 
   /**

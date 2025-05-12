@@ -19,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final SparkMax armMotor;
     private final SparkMaxConfig config;
     private double armAngle;
-    private double offset=Constants.ArmConstants.ENCODER_OFFSET;
+    private double offset = Constants.ArmConstants.ENCODER_OFFSET;
     private boolean finished;
     DutyCycleEncoder encoder;
     private final PIDController pidController;
@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
         pidController=new PIDController(Constants.ArmConstants.Kp, Constants.ArmConstants.Ki, Constants.ArmConstants.Kd);
         // Initialize the motor with the specified ID and motor type
         armMotor = new SparkMax(Constants.ArmConstants.MOTOR_ID, SparkMax.MotorType.kBrushless);
-        encoder=new DutyCycleEncoder(Constants.ArmConstants.ENCODER_PORT, 360, Constants.ArmConstants.ENCODER_OFFSET);
+        encoder=new DutyCycleEncoder(Constants.ArmConstants.ENCODER_PORT, 360, offset);
         pidController.setTolerance(1);
         // Create a new configuration object
         config = new SparkMaxConfig();
