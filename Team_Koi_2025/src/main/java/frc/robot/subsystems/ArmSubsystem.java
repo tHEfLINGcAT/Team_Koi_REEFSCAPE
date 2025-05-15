@@ -52,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
       //  double ff=feedforward.calculate(armAngle, velocity);
         //SmartDashboard.putNumber("Arm setpoint", target);
         // Move the arm only if it's within the allowed angle range
-        if(target <= Constants.ArmConstants.MIN_ANGLE && target >= Constants.ArmConstants.MAX_ANGLE&&armAngle<358){
+        if(target >= Constants.ArmConstants.MIN_ANGLE && target <= Constants.ArmConstants.MAX_ANGLE){
            // armMotor.set(pidController.calculate(armAngle,target));
                 armMotor.setVoltage((pidController.calculate(armAngle,target))
             +feedforward.calculate(Math.toRadians(armAngle),velocity));
@@ -61,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
           // armMotor.setVoltage(kV);
             
             finished=false;
-        } else {
+        }  else {
             finished=true;
         }
     }
@@ -80,6 +80,9 @@ public class ArmSubsystem extends SubsystemBase {
         return encoder.isConnected();
     }
     public boolean getFinished(){
+        if (finished) {
+            armMotor.set(0);
+        }
         return finished;
     }
     @Override
@@ -91,8 +94,7 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Arm angle encoder connected", encoderConnected());
         SmartDashboard.putNumber("setPoint", 290);
         SmartDashboard.putNumber("error", 290-currentAramAngle);
-        double Kg=Constants.ArmConstants.Kg*Math.sin(Math.toRadians(armAngle));
+        double Kg=Constants.ArmConstants.Kg*Math.sin(Math.toRadians(armAngle+20));
         feedforward=new ArmFeedforward(Constants.ArmConstants.Ks, Constants.ArmConstants.Kg, Constants.ArmConstants.Kv);
-
     }
 }

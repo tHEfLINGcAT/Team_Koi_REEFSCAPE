@@ -52,13 +52,13 @@ public final class Constants {
 
   public static class ArmConstants{
     public static final int MOTOR_ID = 25; 
-    public static final double MAX_ANGLE = 269; 
-    public static final double MIN_ANGLE = 350; 
+    public static final double MAX_ANGLE = 95; 
+    public static final double MIN_ANGLE = 5;
     public static final double SPEED_LIMIT = 0.5;
-    public static final double ENCODER_OFFSET=84;
+    public static final double ENCODER_OFFSET=346.000000; // L1: 10, L2:76 , L3: 90, GIVER THING: 76
     public static final int ENCODER_PORT=0;
-    public static final double Kp=0.12,Ki=0,Kd=0.03;
-    public static final double Ks=1,Kg=-0.9,Kv=1.1,Ka=0;
+    public static final double Kp=0.15,Ki=0,Kd=0.00;
+    public static final double Ks=1,Kg=-0.9,Kv=0.06,Ka=0;
   }
 
 
@@ -68,12 +68,13 @@ public final class Constants {
 
   public static final class HandRotaionConstants{
     public static final int CAN_HAND_DEGREE_ID=21;
-    public static final double HAND_DGREE_SPARKMAX_Kp=0.0543;
+    public static final double HAND_DGREE_SPARKMAX_Kp=0.09;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;
     public static final double HAND_DGREE_SPARKMAX_FF=0.0021141649048626;
-    public static final double HAND_DGREE_ENCODER_OFFSET=165.118504;
+    public static final int HAND_DGREE_ENCODER_OFFSET= 346;
     public static final int HAND_DGREE_ENCODER_PORT=4;
+
   } 
 
     public static final class RobotHandConstants {

@@ -132,11 +132,11 @@ public class RobotContainer
         driveDirectAngleKeyboard);
         Command grabPeice=new HandControllerCommand(ControlHand,1,1);
         Command removePeice=new HandControllerCommand(ControlHand,0.5,-1);
-        Command RotateHand=new HandRotaionCommand(RotateHandSub, 90,false);
-        Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 13,true);
-        Command rotateHandCommand=new ArmCommand(armSubsystem,290,2);
-        Command putL2reefComman=new ArmCommand(armSubsystem, 336, 2);
-        Command roteteHandCommandBack=new ArmCommand(armSubsystem, 315, 2);
+        Command RotateHand=new HandRotaionCommand(RotateHandSub, 181);
+        Command RotateHandSecond=new HandRotaionCommand(RotateHandSub, 271);
+        Command rotateHandCommand=new ArmCommand(armSubsystem, 10,1);
+        Command putL2reefComman=new ArmCommand(armSubsystem, 40, 1);
+        Command roteteHandCommandBack=new ArmCommand(armSubsystem, 70, 1);
 
     if (RobotBase.isSimulation())
     {
@@ -181,7 +181,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      drivebase.setDefaultCommand(driveRobotOrientedAngularVelocity);
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       handXbox.leftTrigger().whileTrue(grabPeice);
@@ -200,7 +200,6 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
-    
     }
 
   }

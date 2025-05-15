@@ -6,21 +6,19 @@ import frc.robot.subsystems.HandRotaionSubSystem;
 public class HandRotaionCommand extends Command {
     public final HandRotaionSubSystem handRoSubsystem;
     private double degree;
-    private boolean inverted;
-    public HandRotaionCommand(HandRotaionSubSystem handRo,double angle,boolean invertedd){
+    public HandRotaionCommand(HandRotaionSubSystem handRo,double angle){
         handRoSubsystem=handRo;
         degree=angle;
-        inverted=invertedd;
         addRequirements(handRo);
     }
 
     public void execute(){
-        handRoSubsystem.turnArm(degree,inverted);
+        handRoSubsystem.turnArm(degree);
       //  System.out.println("COMMAND ROTATE");
   }
     @Override
     public boolean isFinished() {
         //when the motor got to the right angle
-        return (handRoSubsystem.getPosition()<=degree&&handRoSubsystem.isInverted())||(handRoSubsystem.getPosition()>=degree&&!handRoSubsystem.isInverted());
+        return handRoSubsystem.getFinished();
     }
 }

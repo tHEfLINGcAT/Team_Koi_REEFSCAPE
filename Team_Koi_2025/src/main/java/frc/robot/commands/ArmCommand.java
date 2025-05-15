@@ -11,12 +11,11 @@ public class ArmCommand extends Command{
         m_ArmSubsystem=subsystem;
         angle=anglle;
         velocity=velcoiity;
-        ;
         addRequirements(subsystem);
     }
     public void execute(){
         m_ArmSubsystem.moveArm(angle,velocity);
-        System.out.println("EECUTING");
+        System.out.println("MOVE");
     }
 
    // public void end(boolean interrupted){
