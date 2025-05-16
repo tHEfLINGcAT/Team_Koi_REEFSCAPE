@@ -15,58 +15,66 @@ import frc.robot.Constants;
 
 public class HandRotaionSubSystem extends SubsystemBase {
     private SparkMax m_handRo;
-    private boolean finished,isInverted, noSuicide;
+    private boolean finished, isInverted, noSuicide;
     private final PIDController pidController;
     double offset;
     DutyCycleEncoder encoder;
     SparkMaxConfig config = new SparkMaxConfig();
-    public HandRotaionSubSystem(){
-        encoder= new DutyCycleEncoder(Constants.HandRotaionConstants.HAND_DGREE_ENCODER_PORT, 360, Constants.HandRotaionConstants.HAND_DGREE_ENCODER_OFFSET);
-        m_handRo=new SparkMax(Constants.HandRotaionConstants.CAN_HAND_DEGREE_ID, MotorType.kBrushless);
+
+    public HandRotaionSubSystem() {
+        encoder = new DutyCycleEncoder(Constants.HandRotaionConstants.HAND_DGREE_ENCODER_PORT, 360,
+                Constants.HandRotaionConstants.HAND_DGREE_ENCODER_OFFSET);
+        m_handRo = new SparkMax(Constants.HandRotaionConstants.CAN_HAND_DEGREE_ID, MotorType.kBrushless);
         config.idleMode(IdleMode.kBrake);
-        pidController=new PIDController(Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kp,Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Ki,Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kd);
-       // SmartDashboard.putNumber("P hand Gain",Constants.ArmConstants.Kp);
-       // SmartDashboard.putNumber("D hand Gain", Constants.ArmConstants.Kd);
+        pidController = new PIDController(Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kp,
+                Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Ki,
+                Constants.HandRotaionConstants.HAND_DGREE_SPARKMAX_Kd);
+        // SmartDashboard.putNumber("P hand Gain",Constants.ArmConstants.Kp);
+        // SmartDashboard.putNumber("D hand Gain", Constants.ArmConstants.Kd);
         m_handRo.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-    public void turnArm(Double angle){
-        if (getPosition()<271&&getPosition()>181) {
-            m_handRo.setVoltage(pidController.calculate(getPosition(),angle));
+
+    public void turnArm(Double angle) {
+        if (getPosition() < 271 && getPosition() > 181) {
+            m_handRo.setVoltage(pidController.calculate(getPosition(), angle));
+        } else {
+            finished = true;
         }
-        else{
-            finished=true;
-        }
-    //    if (getPosition()<=angle&&!inverted && noSuicide) {
-    //         m_handRo.set(0.3);
-    //         isInverted=false;
-    //         noSuicide = false;
-    //    }
-    //    else if (inverted&&getPosition()>=angle && !noSuicide) {
-    //         m_handRo.set(-0.3);
-    //         isInverted=true;
-    //         noSuicide = true;
-    //    }
-    //    else{
-    //     m_handRo.set(0);
-    //    }
+        // if (getPosition()<=angle&&!inverted && noSuicide) {
+        // m_handRo.set(0.3);
+        // isInverted=false;
+        // noSuicide = false;
+        // }
+        // else if (inverted&&getPosition()>=angle && !noSuicide) {
+        // m_handRo.set(-0.3);
+        // isInverted=true;
+        // noSuicide = true;
+        // }
+        // else{
+        // m_handRo.set(0);
+        // }
     }
-    public boolean isInverted(){
+
+    public boolean isInverted() {
         return isInverted;
     }
-    public void endMotor(){
+
+    public void endMotor() {
         m_handRo.set(0);
     }
-    public boolean getFinished(){
+
+    public boolean getFinished() {
         return finished;
     }
-    public double getPosition(){
+
+    public double getPosition() {
         return encoder.get();
     }
-    public void periodic(){
-        SmartDashboard.putNumber("curret rotaion postion",(int)getPosition());
+
+    public void periodic() {
+        SmartDashboard.putNumber("curret rotaion postion", (int) getPosition());
         SmartDashboard.putBoolean("isCOnnected rotate", encoder.isConnected());
         System.out.println(isInverted);
         // SmartDashboard.putNumber("set point",90);
     }
-}
-;
+};
