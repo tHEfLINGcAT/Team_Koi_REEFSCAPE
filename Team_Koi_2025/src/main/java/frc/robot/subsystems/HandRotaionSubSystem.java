@@ -35,25 +35,12 @@ public class HandRotaionSubSystem extends SubsystemBase {
     }
 
     public void turnArm(Double angle) {
-        if (getPosition() =< 271 && getPosition() => 181) {
+        if (getPosition() >= 271 && getPosition() <= 181) {
             m_handRo.setVoltage(pidController.calculate(getPosition(), angle));
         } else {
             finished = true;
             m_handRo.setVoltage(0);
         }
-        // if (getPosition()<=angle&&!inverted && noSuicide) {
-        // m_handRo.set(0.3);
-        // isInverted=false;
-        // noSuicide = false;
-        // }
-        // else if (inverted&&getPosition()>=angle && !noSuicide) {
-        // m_handRo.set(-0.3);
-        // isInverted=true;
-        // noSuicide = true;
-        // }
-        // else{
-        // m_handRo.set(0);
-        // }
     }
 
     public boolean isInverted() {
@@ -74,8 +61,7 @@ public class HandRotaionSubSystem extends SubsystemBase {
 
     public void periodic() {
         SmartDashboard.putNumber("curret rotaion postion", (int) getPosition());
-        SmartDashboard.putBoolean("isCOnnected rotate", encoder.isConnected());
+        SmartDashboard.putBoolean("is connnected rotate", encoder.isConnected());
         System.out.println(isInverted);
-        // SmartDashboard.putNumber("set point",90);
     }
 };

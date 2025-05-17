@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommand;
+import frc.robot.commands.CommandCycler;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.HandControllerCommand;
 import frc.robot.commands.HandRotaionCommand;
@@ -58,11 +59,11 @@ public class RobotContainer {
    * by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-      () -> driverXbox.getLeftY() * -0.8,
-      () -> driverXbox.getLeftX() * -0.8)
+      () -> driverXbox.getLeftY() * (driverXbox.rightBumper().getAsBoolean() ? -0.3 : -1),
+      () -> driverXbox.getLeftX() * (driverXbox.rightBumper().getAsBoolean() ? -0.3 : -1))
       .withControllerRotationAxis(() -> driverXbox.getRightX() * -1)
       .deadband(OperatorConstants.DEADBAND)
-      .scaleTranslation(0.8)
+      .scaleTranslation(1)
       .allianceRelativeControl(false);
 
   /**
@@ -144,9 +145,11 @@ public class RobotContainer {
     Command removePeice = new HandControllerCommand(ControlHand, 0.5, -1);
     Command RotateHand = new HandRotaionCommand(RotateHandSub, 181);
     Command RotateHandSecond = new HandRotaionCommand(RotateHandSub, 271);
+    Command RotateHandCycle = new CommandCycler(new Command[]{RotateHand, RotateHandSecond});
     Command rotateHandCommand = new ArmCommand(armSubsystem, 10, 1);
     Command putL2reefComman = new ArmCommand(armSubsystem, 40, 1);
     Command roteteHandCommandBack = new ArmCommand(armSubsystem, 70, 1);
+    
 
     if (RobotBase.isSimulation()) {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
@@ -191,12 +194,13 @@ public class RobotContainer {
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       handXbox.leftTrigger().whileTrue(grabPeice);
       handXbox.rightTrigger().whileTrue(removePeice);
-      handXbox.y().onTrue(RotateHand);
-      handXbox.a().onTrue(RotateHandSecond);
+      handXbox.y().onTrue(RotateHandCycle);
       handXbox.povDown().onTrue(rotateHandCommand);
       handXbox.povUp().onTrue(roteteHandCommandBack);
       handXbox.povLeft().onTrue(putL2reefComman);
-      elevatorSubsystem.setDefaultCommand(new ElevatorCommand(elevatorSubsystem, () -> handXbox.getLeftY() * 0.8));
+      elevatorSubsystem.setDefaultCommand(
+          new ElevatorCommand(elevatorSubsystem,
+                              () -> handXbox.getRightTriggerAxis() - handXbox.getLeftTriggerAxis()));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0))));
