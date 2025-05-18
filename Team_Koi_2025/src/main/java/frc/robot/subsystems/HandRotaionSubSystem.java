@@ -35,7 +35,7 @@ public class HandRotaionSubSystem extends SubsystemBase {
     }
 
     public void turnArm(Double angle) {
-        if (getPosition() >= 271 && getPosition() <= 181) {
+        if (getPosition() <= 273 && getPosition() >= 179) {
             m_handRo.setVoltage(pidController.calculate(getPosition(), angle));
         } else {
             finished = true;

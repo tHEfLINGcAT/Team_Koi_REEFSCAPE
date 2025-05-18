@@ -24,7 +24,7 @@ public final class Constants {
   public static final double ROBOT_MASS = 81 * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED = Units.feetToMeters(14.5);
+  public static final double MAX_SPEED = Units.feetToMeters(28);
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -47,7 +47,8 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int ELEVATE_MOTOR_ID = 26;
     public static final int ELEVATOR_START_POSITION = 0;
-    public static final int ELEVATOR_END_POSITION = 0;
+    public static final int ELEVATOR_END_POSITION = 700;
+    public static final int MINUMUM_POINT = -50;
   }
 
   public static class ElevatorPIDConstants {
@@ -71,13 +72,12 @@ public final class Constants {
 
   public static final class HandRotaionConstants {
     public static final int CAN_HAND_DEGREE_ID = 21;
-    public static final double HAND_DGREE_SPARKMAX_Kp = 0.09;
+    public static final double HAND_DGREE_SPARKMAX_Kp = 0.06;
     public static final double HAND_DGREE_SPARKMAX_Ki = 0;
-    public static final double HAND_DGREE_SPARKMAX_Kd = 0;
+    public static final double HAND_DGREE_SPARKMAX_Kd = 0.0;
     public static final double HAND_DGREE_SPARKMAX_FF = 0.0021141649048626;
     public static final int HAND_DGREE_ENCODER_OFFSET = 346;
     public static final int HAND_DGREE_ENCODER_PORT = 4;
-
   }
 
   public static final class RobotHandConstants {

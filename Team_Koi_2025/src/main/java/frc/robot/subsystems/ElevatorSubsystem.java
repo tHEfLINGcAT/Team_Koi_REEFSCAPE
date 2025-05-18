@@ -4,6 +4,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -71,7 +72,22 @@ public class ElevatorSubsystem extends SubsystemBase {
         // ,targetVelocity), ControlType.kVelocity);
     }
 
+    public void setMinimunPoint() {
+        if (Math.round((motor.getEncoder().getPosition())/10-2)*10 > Constants.ElevatorConstants.MINUMUM_POINT) {
+            motor.set(-0.3);
+        } else if(Math.round((motor.getEncoder().getPosition())/10-2)*10 > Constants.ElevatorConstants.MINUMUM_POINT) {
+            motor.set(0.3);
+        } else {
+            motor.set(0);
+        }
+    }
+
     public void stop() {
         motor.stopMotor();
+    }
+
+    public void periodic()
+    {
+        SmartDashboard.putNumber("Elevator relative position", motor.getEncoder().getPosition());
     }
 }
