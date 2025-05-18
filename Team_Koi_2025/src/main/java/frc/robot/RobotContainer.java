@@ -189,18 +189,10 @@ public class RobotContainer {
       driverXbox.leftBumper().onTrue(Commands.none());
       driverXbox.rightBumper().onTrue(Commands.none());
     } else {
+    // driver controller
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      handXbox.leftTrigger().whileTrue(grabPeice);
-      handXbox.rightTrigger().whileTrue(removePeice);
-      handXbox.y().onTrue(RotateHandCycle);
-      handXbox.povDown().onTrue(rotateHandCommand);
-      handXbox.povUp().onTrue(roteteHandCommandBack);
-      handXbox.povLeft().onTrue(putL2reefComman);
-      elevatorSubsystem.setDefaultCommand(
-          new ElevatorCommand(elevatorSubsystem,
-                              () -> handXbox.getRightTriggerAxis() - handXbox.getLeftTriggerAxis()));
       driverXbox.b().whileTrue(
           drivebase.driveToPose(
               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0))));
@@ -208,6 +200,16 @@ public class RobotContainer {
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+    // operator controller
+      handXbox.leftBumper().whileTrue(grabPeice);
+      handXbox.rightBumper().whileTrue(removePeice);
+      handXbox.y().onTrue(RotateHandCycle);
+      handXbox.povDown().onTrue(rotateHandCommand);
+      handXbox.povUp().onTrue(roteteHandCommandBack);
+      handXbox.povLeft().onTrue(putL2reefComman);
+      elevatorSubsystem.setDefaultCommand(
+          new ElevatorCommand(elevatorSubsystem,
+                              () -> handXbox.getRightTriggerAxis() - handXbox.getLeftTriggerAxis()));
     }
 
   }
