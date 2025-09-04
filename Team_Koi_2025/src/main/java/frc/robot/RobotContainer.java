@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -48,7 +49,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(1);
-  final CommandXboxController handXbox = new CommandXboxController(0);
+  final CommandXboxController handXbox = new CommandXboxController(2);
   // The robot's subsystems and commands are defined here...
   private final RobotHandSubsystem ControlHand = new RobotHandSubsystem();
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
@@ -152,7 +153,7 @@ public class RobotContainer {
     Command rotateHandCommand = new ArmCommand(armSubsystem, 10, 1);
     Command putL2reefComman = new ArmCommand(armSubsystem, 40, 1);
     Command roteteHandCommandBack = new ArmCommand(armSubsystem, 70, 1);
-    Command setElevtorDefaultPos = new ElevatorSetPositionCommand(elevatorSubsystem);
+    Command setElevtorDefaultPos = new ElevatorSetPositionCommand(elevatorSubsystem, 50);
 
     if (RobotBase.isSimulation()) {
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
@@ -205,9 +206,9 @@ public class RobotContainer {
     // operator controller
       handXbox.leftBumper().whileTrue(grabPeice);
       handXbox.rightBumper().whileTrue(removePeice);
-      // handXbox.y().onTrue(new InstantCommand(() -> cycler.cycle()))
-      handXbox.y().onTrue(RotateHand);
-      handXbox.a().onTrue(RotateHandSecond);
+      // we physically removed the hand from the robot
+      // handXbox.y().onTrue(RotateHand);
+      // handXbox.a().onTrue(RotateHandSecond);
       handXbox.povDown().onTrue(rotateHandCommand);
       handXbox.povUp().onTrue(roteteHandCommandBack);
       handXbox.povLeft().onTrue(putL2reefComman);
@@ -228,10 +229,10 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return new RunCommand(() -> {
       drivebase.zeroGyro();
-      drivebase.drive(new ChassisSpeeds(1, 0, 0));
+      drivebase.drive(new ChassisSpeeds(-1, 0, 0));
     }
 
-        , drivebase).withTimeout(4);
+        , drivebase).withTimeout(2);
   }
 
   public void setMotorBrake(boolean brake) {

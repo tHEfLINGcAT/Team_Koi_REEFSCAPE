@@ -5,20 +5,20 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ElevatorSetPositionCommand extends Command {
   private final ElevatorSubsystem elevatorSubsystem;
-
+  private final int angle;
   /**
-   * Creates a new ExampleCommand.
+   * Command to set (move to a preset relative angle) the elevator
    *
-   * @param subsystem The subsystem used by this command.
+   * @param Elevator The subsystem used by this command.
    */
-  public ElevatorSetPositionCommand(ElevatorSubsystem ele) {
+  public ElevatorSetPositionCommand(ElevatorSubsystem ele, int angle) {
     elevatorSubsystem = ele;
+    this.angle = angle;
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +29,7 @@ public class ElevatorSetPositionCommand extends Command {
   @Override
   public void execute() {
     System.out.println("setting position");
-    elevatorSubsystem.setMinimunPoint();
+    elevatorSubsystem.SetElevatorPosition(angle);
   }
 
   // Called once the command ends or is interrupted.

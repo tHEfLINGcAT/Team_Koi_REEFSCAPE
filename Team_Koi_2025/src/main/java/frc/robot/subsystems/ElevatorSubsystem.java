@@ -72,14 +72,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         // ,targetVelocity), ControlType.kVelocity);
     }
 
-    public void setMinimunPoint() {
-        if (Math.round((motor.getEncoder().getPosition())/10-2)*10 > Constants.ElevatorConstants.MINUMUM_POINT) {
-            motor.set(-0.3);
-        } else if(Math.round((motor.getEncoder().getPosition())/10-2)*10 > Constants.ElevatorConstants.MINUMUM_POINT) {
-            motor.set(0.3);
-        } else {
-            motor.set(0);
-        }
+    public void SetElevatorPosition(int angle) {
+        motor.getClosedLoopController().setReference(feedforward.calculate(radians,angle), ControlType.kPosition);
     }
 
     public void stop() {
