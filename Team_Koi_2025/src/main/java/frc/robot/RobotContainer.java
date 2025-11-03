@@ -33,9 +33,18 @@ public class RobotContainer
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final CommandXboxController handXbox=new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
+<<<<<<< Updated upstream
   private final RobotHandSubsystem robotHand= new RobotHandSubsystem();
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve"));
+=======
+  private final RobotHandSubsystem ControlHand = new RobotHandSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  //private final HandRotaionSubSystem RotateHandSub = new HandRotaionSubSystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+      "swerve"));
+>>>>>>> Stashed changes
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -117,8 +126,22 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
+<<<<<<< Updated upstream
     if (RobotBase.isSimulation())
     {
+=======
+    Command grabPeice = new HandControllerCommand(ControlHand, 1, 1);
+    Command removePeice = new HandControllerCommand(ControlHand, 0.5, -1);
+    //Command RotateHand = new HandRotaionCommand(RotateHandSub, 181);
+    //Command RotateHandSecond = new HandRotaionCommand(RotateHandSub, 271);
+    //CommandCycler cycler = new CommandCycler(RotateHand, RotateHandSecond);
+    Command rotateHandCommand = new ArmCommand(armSubsystem, 10, 1);
+    Command putL2reefComman = new ArmCommand(armSubsystem, 40, 1);
+    Command roteteHandCommandBack = new ArmCommand(armSubsystem, 70, 1);
+    Command setElevtorDefaultPos = new ElevatorSetPositionCommand(elevatorSubsystem, 50);
+
+    if (RobotBase.isSimulation()) {
+>>>>>>> Stashed changes
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else
     {
@@ -152,8 +175,25 @@ public class RobotContainer
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+<<<<<<< Updated upstream
       driverXbox.rightBumper().onTrue(Commands.none());
     
+=======
+    // operator controller
+      handXbox.leftBumper().whileTrue(grabPeice);
+      handXbox.rightBumper().whileTrue(removePeice);
+      // we physically removed the hand from the robot
+      // handXbox.y().onTrue(RotateHand);
+      // handXbox.a().onTrue(RotateHandSecond);
+      handXbox.povDown().onTrue(rotateHandCommand);
+      handXbox.povUp().onTrue(roteteHandCommandBack);
+      handXbox.povLeft().onTrue(putL2reefComman);
+      elevatorSubsystem.setDefaultCommand(
+          new ElevatorCommand(elevatorSubsystem,
+                              () -> handXbox.getRightTriggerAxis() - handXbox.getLeftTriggerAxis()));
+      handXbox.x().whileTrue(setElevtorDefaultPos);
+      //handXbox.b().onTrue(new InstantCommand(() -> cycler.cycle()));
+>>>>>>> Stashed changes
     }
 
   }
@@ -166,7 +206,12 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
+<<<<<<< Updated upstream
     return drivebase.getAutonomousCommand("New Auto");
+=======
+    Command rotateHandCommand = new ArmCommand(armSubsystem, 10, 1);
+    return rotateHandCommand;
+>>>>>>> Stashed changes
   }
 
   public void setMotorBrake(boolean brake)

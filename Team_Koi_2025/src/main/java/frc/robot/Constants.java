@@ -48,10 +48,18 @@ public final class Constants {
     public static final int kP = 0, kI = 0, kD = 0;
   }
 
+<<<<<<< Updated upstream
   public static class ArmConstants{
     public static final int MOTOR_ID = 1; 
     public static final double MAX_ANGLE = 100.0; 
     public static final double MIN_ANGLE = 0.0; 
+=======
+  public static class ArmConstants {
+    public static final int MOTOR_ID_LEFT = 25;
+    public static final int MOTOR_ID_RIGHT = 20;
+    public static final double MAX_ANGLE = 95;
+    public static final double MIN_ANGLE = 5;
+>>>>>>> Stashed changes
     public static final double SPEED_LIMIT = 0.5;
   }
 
@@ -60,12 +68,32 @@ public final class Constants {
     public static final int kS = 0, kG = 0, kV = 0, kA = 0;;
   }
 
+<<<<<<< Updated upstream
   public static final class HandRotaionConstants{
     public static final int CAN_HAND_DEGREE_ID=0;
     public static final double HAND_DGREE_SPARKMAX_Kp=0.246;
     public static final double HAND_DGREE_SPARKMAX_Ki=0;
     public static final double HAND_DGREE_SPARKMAX_Kd=0;    
   } 
+=======
+  public static final class HandRotaionConstants {
+    public static final int CAN_HAND_DEGREE_ID = 21;
+    public static final double HAND_DGREE_SPARKMAX_Kp = 0.050;
+    public static final double HAND_DGREE_SPARKMAX_Ki = 0;
+    public static final double HAND_DGREE_SPARKMAX_Kd = 0.0;
+    public static final double HAND_DGREE_SPARKMAX_FF = 0.0021141649048626;
+    public static final int HAND_DGREE_ENCODER_OFFSET = 346;
+    public static final int HAND_DGREE_ENCODER_PORT = 4;
+  }
+
+  public static final class RobotHandConstants {
+    //public static final int MOTOR_ID = 20;
+    public static final double GRAB_POWER = 1;
+    public static final double IDLE_POWER = 0.08;
+    public static final double RELEASE_POWER = 0.2;
+    public static final double STOPING_POWER = 0;
+  }
+>>>>>>> Stashed changes
 
     public static final class RobotHandConstants {
         public static final int MOTOR_ID = 17;
